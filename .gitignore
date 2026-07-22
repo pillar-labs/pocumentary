@@ -1,0 +1,43 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+uv.lock
+*.mov
+
+# Python build artifacts
+dist/
+build/
+*.egg-info/
+
+# macOS cruft
+.DS_Store
+
+# Narration credentials — never commit an API key
+.env
+.env.*
+
+# Generated per-take recording sidecars
+*.mov.timeline.json
+*.mov.ffmpeg.log
+
+# Internal docs — not shipped with the open-source release (keep only the
+# images the README embeds)
+docs/*
+!docs/pocumentary_logo.png
+!docs/pillar-logo.svg
+!docs/pillar-logo-light.svg
+
+# Claude Code: ship the project skills, ignore any local config
+.claude/*
+!.claude/skills/
+
+# Local tooling and assets — not part of the open-source release
+# (comments must be on their own line; git has no inline-comment syntax)
+*.skill
+# stray root lockfile (the trailer keeps its own)
+/package-lock.json
+# stray directory created by an errant command
+/~/
+# unpublished example, kept on disk only
+examples/fastmcp-cand003/

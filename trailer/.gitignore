@@ -1,0 +1,6 @@
+node_modules/
+out/
+# Generated / heavy media — reproduce with scripts/prep.sh (+ the two yt-dlp downloads)
+public/clips/
+public/music.mp3
+public/pocumentary_logo.png

@@ -1,0 +1,18 @@
+[recording]
+fps = 30
+crop = "auto"
+
+[layout]
+mode = "columns"
+
+[[pane]]
+title = "1  SERVER"
+cmd = "python server_role.py"
+cwd = "/tmp/demo"
+env = { DEMO_STEP_DELAY = "2.2" }
+signals = ["server_ready"]
+
+[[pane]]
+title = "2  ADVERSARY"
+cmd = "python adversary_role.py"
+gate_on = "server_ready"

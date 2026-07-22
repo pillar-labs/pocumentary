@@ -1,0 +1,14 @@
+[recording]
+fps = 0
+
+[layout]
+mode = "diagonal"
+
+[[pane]]
+title = "dup"
+cmd = "echo a"
+
+[[pane]]
+title = "dup"
+cmd = ""
+target = "carrier-pigeon"

@@ -1,0 +1,95 @@
+# PoCumentary demo — langroid Neo4jChatAgent Cypher injection -> RCE (CVE-2026-55615).
+#
+# Three gated terminals walk through the four steps of the killchain (see the
+# diagram in README.md) for a real, published, patched CVE (langroid <= 0.65.4,
+# CVSS 9.2):
+#   STEP 1  INJECTION      an attacker prompt smuggles in a Cypher payload
+#   STEP 2  THE LLM WRITES the agent turns the prompt into a Cypher query
+#   STEP 3  NO GUARDRAIL   the agent forwards the query with no validation
+#   STEP 4  EXECUTION      APOC runs it as an OS command -> Calculator launches
+# The RCE at the end is real; the Neo4j/LLM infrastructure is a self-contained
+# stdlib stand-in (no network egress, no API key). See README.md.
+#
+# Cheap loop (headless — proves the RCE end to end, fails unless calc pops):
+#   uv run pocu dryrun   examples/langroid-cypher-rce/demo.toml
+# Expensive take (macOS on-screen recording + timeline sidecar):
+#   uv run pocu record   examples/langroid-cypher-rce/demo.toml
+# Burn the caption track / speak it:
+#   uv run pocu annotate examples/langroid-cypher-rce/demo.toml <recording>.mov
+#   uv run pocu narrate  examples/langroid-cypher-rce/demo.toml <recording>.mov
+#
+# Runs on plain `python3` (stdlib only). Authorized security research;
+# educational reproduction / demonstration only.
+
+[recording]
+fps = 30
+out = "langroid-cypher-rce-{stamp}.mov"
+crop = "auto"          # crop to exactly the region the 3 columns occupy
+step_delay = 2.0       # readable per-step beat (baked into each role as $DEMO_STEP_DELAY)
+hold = 12.0            # keep rolling after the RCE banner so the closing step lands
+gate_timeout = 120.0
+keep = 3
+
+[layout]
+mode = "columns"
+
+[verify]
+# The backend writes `rce` ONLY after it actually spawns the OS command, so this
+# is a true success predicate: dryrun/record fail unless the payload executed.
+expect = ["rce"]
+timeout = 120
+
+[tts]
+# ElevenLabs voice for `narrate` — "Brian", a deep, documentary-style male voice
+# available on every account tier (including free). Swap in your own voice_id.
+voice_id = "nPczCjzI2devNBz1zQrb"
+model_id = "eleven_multilingual_v2"
+
+[[pane]]
+title = "1 NEO4J+APOC"
+cmd = "python3 neo4j_role.py"
+signals = ["db_ready", "rce"]
+
+[[pane]]
+title = "2 AGENT"
+cmd = "python3 agent_role.py"
+gate_on = "db_ready"          # do not start until the backend is listening
+signals = ["agent_ready", "cypher_emitted", "forwarded"]
+
+[[pane]]
+title = "3 ATTACKER"
+cmd = "python3 attacker_role.py"
+gate_on = "agent_ready"       # do not start until the agent is waiting for a prompt
+signals = ["injected"]
+
+# --- Caption / narration track. One line of setup, then one line per killchain
+# step, each anchored to the signal that opens that step so captions and spoken
+# narration land exactly as the step happens on screen. The four step lines
+# mirror the four boxes of the README flow diagram. The same set drives both
+# `annotate` (burned captions) and `narrate` (speech); each non-final line is
+# sized to be spoken within the gap to the next event. ---
+
+[[annotation]]
+on = "start"
+text = "The target: a langroid Neo4jChatAgent backed by a Neo4j database with APOC enabled, which runs any Cypher the agent produces."
+duration = 12.0
+
+[[annotation]]
+on = "injected"
+text = "Step 1, injection: the attacker hides a Cypher command inside an ordinary request the agent will read."
+duration = 11.0
+
+[[annotation]]
+on = "cypher_emitted"
+text = "Step 2: the agent's LLM turns that prompt into a query, and the injected command becomes the query."
+duration = 11.0
+
+[[annotation]]
+on = "forwarded"
+text = "Step 3: with no validation and no dangerous-operations gate, the agent sends the query straight to the driver."
+duration = 11.0
+
+[[annotation]]
+on = "rce"
+text = "Step 4: APOC runs the query as an operating-system command and Calculator launches. Remote code execution, CVE-2026-55615."
+duration = 12.0

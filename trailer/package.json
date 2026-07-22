@@ -1,0 +1,23 @@
+{
+  "name": "pocumentary-trailer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Release trailer for PoCumentary (Remotion composition)",
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render Trailer out/pocumentary-trailer.mp4 --codec=h264"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.496",
+    "@remotion/google-fonts": "4.0.496",
+    "@remotion/transitions": "4.0.496",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "4.0.496"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.4.5"
+  }
+}

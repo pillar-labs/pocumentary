@@ -1,0 +1,27 @@
+# A runnable three-column take. Each pane prints a banner, works briefly, and exits;
+# pocumentary holds the recording open for `hold` seconds so the final frame is readable.
+# Run: uv run pocumentary record examples/three-column.toml
+[recording]
+fps = 30
+out = "three-column-{stamp}.mov"
+crop = "auto"
+step_delay = 0.8
+hold = 4.0
+keep = 3
+
+[layout]
+mode = "columns"
+
+[[pane]]
+title = "1  SERVER"
+cmd = "echo '=== SERVER (victim infra) ==='; sleep 3; echo 'listening'; sleep 6"
+delay = 2.0
+
+[[pane]]
+title = "2  ADVERSARY"
+cmd = "echo '=== ADVERSARY ==='; sleep 3; echo 'registered client'; sleep 4"
+delay = 2.0
+
+[[pane]]
+title = "3  VICTIM"
+cmd = "echo '=== VICTIM (browser) ==='; sleep 3; echo 'followed the lure'; sleep 2"

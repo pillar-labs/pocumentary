@@ -1,0 +1,33 @@
+# Two gated panes with a real file handshake — the smallest complete demo that
+# exercises every V3/V4 mechanism: gating, pacing, cropping, and verification.
+#
+# Cheap loop:      uv run pocumentary dryrun examples/gated-demo.toml
+# Expensive take:  uv run pocumentary record examples/gated-demo.toml
+#
+# `client` will not start until `server` writes the `server_ready` handshake, so
+# the recording never shows a client racing a server that is not up yet.
+[recording]
+fps = 30
+out = "gated-demo-{stamp}.mov"
+crop = "auto"
+step_delay = 1.0
+gate_timeout = 30.0
+hold = 4.0
+keep = 3
+
+[layout]
+mode = "columns"
+
+[verify]
+expect = ["handoff.json"]
+timeout = 30
+
+[[pane]]
+title = "1  SERVER"
+cmd = "sh roles/server.sh"
+signals = ["server_ready"]
+
+[[pane]]
+title = "2  CLIENT"
+cmd = "sh roles/client.sh"
+gate_on = "server_ready"

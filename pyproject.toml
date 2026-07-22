@@ -1,0 +1,31 @@
+[project]
+name = "pocumentary"
+version = "0.1.0"
+description = "PoCumentary — spec-driven CLI for building repeatable AppleScript-driven screen-recording PoC demos."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+tts = ["elevenlabs"]        # cloud narration (preferred)
+tts-local = ["mlx-audio"]   # on-device fallback when no API key is set
+
+[project.scripts]
+pocumentary = "pocumentary.cli:main"
+pocu = "pocumentary.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pocumentary"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
