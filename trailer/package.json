@@ -8,7 +8,7 @@
     "render": "remotion render Trailer out/pocumentary-trailer.mp4 --codec=h264"
   },
   "dependencies": {
-    "@remotion/cli": "4.0.496",
+    "@remotion/cli": "4.0.540",
     "@remotion/google-fonts": "4.0.496",
     "@remotion/transitions": "4.0.496",
     "react": "^18.3.1",
